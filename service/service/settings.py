@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth.registration",
     "debug_toolbar",
+    "drf_yasg",
     # local
     "app.apps.AppConfig",
 ]
@@ -151,15 +152,8 @@ STATIC_ROOT = PurePath(BASE_DIR).joinpath("staticfiles")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Rest framework
-DEFAULT_RENDERER_CLASSES = ("rest_framework.renderers.JSONRenderer",)
-
-if DEBUG:
-    DEFAULT_RENDERER_CLASSES = DEFAULT_RENDERER_CLASSES + (
-        "rest_framework.renderers.BrowsableAPIRenderer",
-    )
 
 REST_FRAMEWORK = {
-    # "DEFAULT_RENDERER_CLASSES": DEFAULT_RENDERER_CLASSES,
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
@@ -168,6 +162,11 @@ REST_FRAMEWORK = {
         # "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
 }
+
+if not DEBUG:
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = (
+        "rest_framework.renderers.JSONRenderer",
+    )
 
 
 # auth and JWT
@@ -204,13 +203,13 @@ SIMPLE_JWT = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{os.environ.get('REDIS_IP')}:6379",
+        "LOCATION": f"redis://{os.environ.get('REDIS_IP')}:{os.environ.get('REDIS_PORT')}",
         "OPTIONS": {
             "db": "10",
             "parser_class": "redis.connection.PythonParser",
             "pool_class": "redis.BlockingConnectionPool",
         },
-        "KEY_PREFIX": "auth",
+        "KEY_PREFIX": {os.environ.get("CACHE_KEY_PREFIX")},
     }
 }
 
