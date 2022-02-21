@@ -51,11 +51,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",
+    "dj_rest_auth.registration",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "dj_rest_auth.registration",
+    "allauth.socialaccount.providers.google",
     "debug_toolbar",
     "drf_yasg",
     # local
@@ -74,6 +75,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "service.urls"
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 TEMPLATES = [
     {
@@ -159,7 +165,6 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        # "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
 }
 
