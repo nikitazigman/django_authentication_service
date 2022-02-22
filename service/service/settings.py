@@ -19,8 +19,8 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load ..env file
-load_dotenv(BASE_DIR.parent.joinpath("conf/env/.env"))
+# Load ..dev-env file
+load_dotenv(BASE_DIR.parent.joinpath("conf/env/.dev-env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -159,13 +159,33 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Rest framework
 
+default_authenticatoin = [
+    "rest_framework_simplejwt.authentication.JWTAuthentication",
+]
+
+default_render = [
+    "rest_framework.renderers.JSONRenderer",
+]
+
+if DEBUG:
+    default_render.extend(
+        [
+            "rest_framework.renderers.BrowsableAPIRenderer",
+        ]
+    )
+    default_authenticatoin.extend(
+        [
+            "rest_framework.authentication.SessionAuthentication",
+            "rest_framework.authentication.TokenAuthentication",
+        ]
+    )
+
 REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": default_render,
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": default_authenticatoin,
 }
 
 if not DEBUG:

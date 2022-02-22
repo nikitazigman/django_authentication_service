@@ -128,4 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 !/service/.idea/
-!/conf/env/.prod_env
+!/conf/env/.prod-env
